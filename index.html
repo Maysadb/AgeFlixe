@@ -1,193 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ageflix - Home</title>
-  <style>
-    /* ستايل عام */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #121212;
-      color: #fff;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ageflix - Home</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #121212;
+    color: #fff;
+  }
 
-    /* نافبار */
+  /* Navbar */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #1c1c1c;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .logo-left {
+    font-size: 26px;
+    font-weight: bold;
+    color: #e50914;
+    transition: transform 0.3s ease;
+  }
+
+  .navbar ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+  }
+
+  .navbar ul li {
+    position: relative;
+    margin: 0 15px;
+    transition: transform 0.3s ease, scale 0.3s ease;
+  }
+
+  .navbar ul li:hover {
+    transform: translateY(-5px) scale(1.1);
+  }
+
+  .navbar ul li a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    padding: 8px 5px;
+    transition: color 0.3s;
+  }
+
+  .navbar ul li a:hover {
+    color: #e50914;
+  }
+
+  /* Dropdown menu with fade + zoom */
+  .navbar ul li ul {
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    top: 45px;
+    left: 0;
+    background-color: rgba(28,28,28,0.95);
+    padding: 10px;
+    border-radius: 5px;
+    min-width: 140px;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    transform: scale(0.8) translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+    z-index: 1000;
+  }
+
+  .navbar ul li:hover ul {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1) translateY(0);
+  }
+
+  .navbar ul li ul li {
+    margin: 5px 0;
+    transition: transform 0.3s ease;
+  }
+
+  .navbar ul li ul li a {
+    font-weight: normal;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    transition: color 0.3s, transform 0.3s;
+  }
+
+  .navbar ul li ul li a span.icon {
+    margin-right: 8px;
+  }
+
+  .navbar ul li ul li a:hover {
+    color: #e50914;
+    transform: translateX(5px);
+  }
+
+  .logo-right {
+    font-size: 16px;
+    color: #ddd;
+    max-width: 200px;
+    text-align: right;
+    transition: transform 0.3s ease;
+  }
+
+  /* Project description */
+  .project-info {
+    background-color: #1c1c1c;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 700px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 18px;
+    color: #ddd;
+  }
+
+  .project-info strong {
+    color: #e50914;
+    font-size: 22px;
+  }
+
+  /* Hero section */
+  .hero {
+    text-align: center;
+    padding: 50px 20px;
+  }
+
+  #webcam-container, #label-container {
+    margin: 20px auto;
+  }
+
+  #startBtn {
+    margin-top: 20px;
+    padding: 12px 25px;
+    font-size: 18px;
+    background-color: #e50914;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+  }
+
+  #startBtn:hover {
+    background-color: #b00610;
+    transform: scale(1.05);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
     .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
-      background-color: #1c1c1c;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
+      flex-direction: column;
+      align-items: flex-start;
     }
-
-    .logo {
-      display: flex;
-      align-items: center;
-    }
-
-    .logo span {
-      font-size: 26px;
-      font-weight: bold;
-      color: #e50914;
-      margin-right: 10px;
-    }
-
-    .logo img {
-      height: 40px;
-      border-radius: 5px;
-    }
-
-    /* قائمة */
     .navbar ul {
-      list-style: none;
-      display: flex;
-      align-items: center;
+      flex-direction: column;
+      width: 100%;
     }
-
     .navbar ul li {
-      position: relative;
-      margin-left: 25px;
+      margin: 10px 0;
+      transform: none !important;
     }
-
-    .navbar ul li a {
-      text-decoration: none;
-      color: #fff;
-      font-weight: bold;
-      padding: 8px 5px;
-      transition: color 0.3s;
-    }
-
-    .navbar ul li a:hover {
-      color: #e50914;
-    }
-
-    /* قائمة فرعية */
     .navbar ul li ul {
-      display: none;
-      position: absolute;
-      top: 35px;
-      left: 0;
-      background-color: #1c1c1c;
-      padding: 10px;
-      border-radius: 5px;
-      min-width: 100px;
+      position: relative;
+      top: 0;
+      transform: scale(1) translateY(0);
+      opacity: 1;
+      visibility: visible;
+      box-shadow: none;
     }
-
-    .navbar ul li:hover ul {
-      display: block;
+    .logo-right {
+      text-align: left;
+      margin-top: 10px;
     }
-
-    .navbar ul li ul li {
-      margin: 5px 0;
-    }
-
-    .navbar ul li ul li a {
-      font-weight: normal;
-      color: #fff;
-    }
-
-    /* قسم المشروع */
-    .project-info {
-      background-color: #1c1c1c;
-      padding: 20px;
-      margin: 20px auto;
-      max-width: 700px;
-      border-radius: 10px;
-      text-align: center;
-      font-size: 18px;
-      color: #ddd;
-    }
-
-    .project-info strong {
-      color: #e50914;
-      font-size: 22px;
-    }
-
-    /* قسم الكاميرا */
-    .hero {
-      text-align: center;
-      padding: 50px 20px;
-    }
-
-    #webcam-container, #label-container {
-      margin: 20px auto;
-    }
-
-    #startBtn {
-      margin-top: 20px;
-      padding: 12px 25px;
-      font-size: 18px;
-      background-color: #e50914;
-      border: none;
-      border-radius: 5px;
-      color: white;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    #startBtn:hover {
-      background-color: #b00610;
-    }
-
-    /* استجابة الهاتف */
-    @media (max-width: 768px) {
-      .navbar {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .navbar ul {
-        flex-direction: column;
-        width: 100%;
-      }
-      .navbar ul li {
-        margin: 10px 0;
-      }
-      .navbar ul li ul {
-        position: relative;
-        top: 0;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
 
   <nav class="navbar">
-    <div class="logo">
-      <span>Ageflix</span>
-      <img src="your-logo.png" alt="Logo"> <!-- ضع رابط الصورة هنا -->
-    </div>
+    <!-- Logo on the left -->
+    <div class="logo-left">Ageflix</div>
+
+    <!-- Menu in the center -->
     <ul>
       <li>
-        <a href="#">About</a>
+        <a href="#">About ▼</a>
         <ul>
-          <li><a href="kids.html">Kids</a></li>
-          <li><a href="adult.html">Adult</a></li>
-          <li><a href="senior.html">Senior</a></li>
+          <li><a href="kids.html"><span class="icon">🧒</span>Kids</a></li>
+          <li><a href="adult.html"><span class="icon">🧑</span>Adult</a></li>
+          <li><a href="senior.html"><span class="icon">👴</span>Senior</a></li>
         </ul>
       </li>
       <li>
-        <a href="movies.html">Movies</a>
+        <a href="movies.html">Movies ▼</a>
         <ul>
-          <li><a href="kids.html">Kids</a></li>
-          <li><a href="adult.html">Adult</a></li>
-          <li><a href="senior.html">Senior</a></li>
+          <li><a href="kids.html"><span class="icon">🧒</span>Kids</a></li>
+          <li><a href="adult.html"><span class="icon">🧑</span>Adult</a></li>
+          <li><a href="senior.html"><span class="icon">👴</span>Senior</a></li>
         </ul>
       </li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
+
+    <!-- Text on the right -->
+    <div class="logo-right">
+      Discover movies for every age group!
+    </div>
   </nav>
 
+  <!-- Project description -->
   <div class="project-info">
-    <strong>Ageflix</strong> - مشروع يفتح الموقع ويستعمل الكاميرا لتحديد الفئة العمرية ويقترح الأفلام المناسبة لكل مستخدم.
+    <strong>Ageflix</strong> - This project uses the camera to detect age and recommends movies suitable for the user.
   </div>
 
   <section class="hero">
@@ -245,5 +282,6 @@
 
     document.getElementById("startBtn").addEventListener("click", init);
   </script>
+
 </body>
 </html>
