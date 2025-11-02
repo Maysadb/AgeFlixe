@@ -5,6 +5,49 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Movie Details - Ageflix</title>
 <link rel="stylesheet" href="style.css">
+<style>
+  .movie-container {
+    max-width: 1000px;
+    margin: 50px auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+
+  .movie-poster {
+    flex: 1 1 300px;
+  }
+
+  .movie-poster img {
+    width: 100%;
+    border-radius: 10px;
+  }
+
+  .movie-info {
+    flex: 2 1 600px;
+  }
+
+  .movie-info h1 {
+    font-size: 36px;
+    margin-bottom: 15px;
+  }
+
+  .movie-info p {
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .trailer {
+    margin-top: 30px;
+  }
+
+  .trailer iframe {
+    width: 100%;
+    height: 500px;
+    border-radius: 10px;
+  }
+</style>
 </head>
 <body>
 <nav class="navbar">
@@ -16,45 +59,44 @@
   </ul>
 </nav>
 
-<section class="movie-details" id="movie-details"></section>
+<div class="movie-container">
+  <div class="movie-poster">
+    <img id="poster" src="" alt="Movie Poster">
+  </div>
+  <div class="movie-info">
+    <h1 id="title">Movie Title</h1>
+    <p id="overview">Movie overview will appear here...</p>
+    <div class="trailer" id="trailer">
+      <!-- Trailer iframe -->
+    </div>
+  </div>
+</div>
 
 <script>
 const API_KEY = "22cb4298f71c93d5eb897e96b361b632";
 const urlParams = new URLSearchParams(window.location.search);
 const movieId = urlParams.get('id');
 
-async function getMovieDetails() {
-  const res = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&append_to_response=credits,videos`);
+async function fetchMovieDetails() {
+  const res = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=en-US`);
   const data = await res.json();
-  const container = document.getElementById("movie-details");
 
-  const poster = data.poster_path 
-    ? `https://image.tmdb.org/t/p/w500${data.poster_path}`
-    : "https://via.placeholder.com/300x450?text=No+Image";
+  document.getElementById('poster').src = data.poster_path ? `https://image.tmdb.org/t/p/w500${data.poster_path}` : "https://via.placeholder.com/300x450?text=No+Image";
+  document.getElementById('title').innerText = data.title;
+  document.getElementById('overview').innerText = data.overview;
 
-  let trailer = "";
-  if (data.videos.results.length > 0) {
-    const trailerObj = data.videos.results.find(v => v.type === "Trailer" && v.site === "YouTube");
-    if(trailerObj) trailer = `<iframe src="https://www.youtube.com/embed/${trailerObj.key}" allowfullscreen></iframe>`;
+  // fetch trailer
+  const trailerRes = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${API_KEY}&language=en-US`);
+  const trailerData = await trailerRes.json();
+  const trailer = trailerData.results.find(v => v.type === "Trailer" && v.site === "YouTube");
+  if(trailer){
+    document.getElementById('trailer').innerHTML = `<iframe src="https://www.youtube.com/embed/${trailer.key}" frameborder="0" allowfullscreen></iframe>`;
+  } else {
+    document.getElementById('trailer').innerHTML = "<p>Trailer not available</p>";
   }
-
-  const cast = data.credits.cast.slice(0,5).map(c => c.name).join(", ");
-
-  container.innerHTML = `
-    <h1>${data.title}</h1>
-    <div class="movie-info">
-      <img src="${poster}" alt="${data.title}">
-      <div class="details">
-        <p><strong>Overview:</strong> ${data.overview}</p>
-        <p><strong>Release Date:</strong> ${data.release_date}</p>
-        <p><strong>Cast:</strong> ${cast}</p>
-        ${trailer}
-      </div>
-    </div>
-  `;
 }
 
-getMovieDetails();
+fetchMovieDetails();
 </script>
 </body>
 </html>
