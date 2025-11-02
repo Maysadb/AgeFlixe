@@ -18,18 +18,35 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
+    padding: 12px 20px;
     background-color: #1c1c1c;
     position: sticky;
     top: 0;
     z-index: 1000;
+    flex-wrap: wrap;
   }
 
   .logo-left {
-    font-size: 26px;
+    font-size: 28px;
     font-weight: bold;
     color: #e50914;
-    transition: transform 0.3s ease;
+  }
+
+  .logo-right {
+    font-size: 16px;
+    color: #ddd;
+    max-width: 250px;
+    text-align: right;
+  }
+
+  /* Menu button for mobile */
+  .menu-btn {
+    display: none;
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
   }
 
   .navbar ul {
@@ -38,16 +55,11 @@
     align-items: center;
     margin: 0;
     padding: 0;
+    transition: max-height 0.3s ease;
   }
 
   .navbar ul li {
-    position: relative;
     margin: 0 15px;
-    transition: transform 0.3s ease, scale 0.3s ease;
-  }
-
-  .navbar ul li:hover {
-    transform: translateY(-5px) scale(1.1);
   }
 
   .navbar ul li a {
@@ -55,65 +67,12 @@
     color: #fff;
     font-weight: bold;
     padding: 8px 5px;
-    transition: color 0.3s;
+    transition: color 0.3s, transform 0.2s;
   }
 
   .navbar ul li a:hover {
     color: #e50914;
-  }
-
-  /* Dropdown menu with fade + zoom */
-  .navbar ul li ul {
-    display: block;
-    opacity: 0;
-    visibility: hidden;
-    position: absolute;
-    top: 45px;
-    left: 0;
-    background-color: rgba(28,28,28,0.95);
-    padding: 10px;
-    border-radius: 5px;
-    min-width: 140px;
-    transition: opacity 0.4s ease, transform 0.4s ease;
-    transform: scale(0.8) translateY(-10px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.5);
-    z-index: 1000;
-  }
-
-  .navbar ul li:hover ul {
-    opacity: 1;
-    visibility: visible;
-    transform: scale(1) translateY(0);
-  }
-
-  .navbar ul li ul li {
-    margin: 5px 0;
-    transition: transform 0.3s ease;
-  }
-
-  .navbar ul li ul li a {
-    font-weight: normal;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    transition: color 0.3s, transform 0.3s;
-  }
-
-  .navbar ul li ul li a span.icon {
-    margin-right: 8px;
-  }
-
-  .navbar ul li ul li a:hover {
-    color: #e50914;
-    transform: translateX(5px);
-  }
-
-  .logo-right {
-    font-size: 16px;
-    color: #ddd;
-    max-width: 200px;
-    text-align: right;
-    transition: transform 0.3s ease;
+    transform: translateY(-2px);
   }
 
   /* Project description */
@@ -145,11 +104,11 @@
 
   #startBtn {
     margin-top: 20px;
-    padding: 12px 25px;
+    padding: 14px 28px;
     font-size: 18px;
     background-color: #e50914;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     color: white;
     cursor: pointer;
     transition: background 0.3s, transform 0.2s;
@@ -160,31 +119,49 @@
     transform: scale(1.05);
   }
 
-  /* Responsive */
+  /* Responsive for mobile */
   @media (max-width: 768px) {
-    .navbar {
-      flex-direction: column;
-      align-items: flex-start;
+    .menu-btn {
+      display: block;
     }
     .navbar ul {
       flex-direction: column;
       width: 100%;
+      max-height: 0;
+      overflow: hidden;
+    }
+    .navbar ul.show {
+      max-height: 500px; /* enough to show all items */
     }
     .navbar ul li {
       margin: 10px 0;
-      transform: none !important;
-    }
-    .navbar ul li ul {
-      position: relative;
-      top: 0;
-      transform: scale(1) translateY(0);
-      opacity: 1;
-      visibility: visible;
-      box-shadow: none;
     }
     .logo-right {
       text-align: left;
-      margin-top: 10px;
+      margin-top: 12px;
+      width: 100%;
+    }
+    #startBtn {
+      width: 90%;
+      font-size: 20px;
+      padding: 16px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero {
+      padding: 40px 10px;
+    }
+    .project-info {
+      padding: 15px;
+      font-size: 16px;
+    }
+    .logo-left {
+      font-size: 24px;
+    }
+    .logo-right {
+      font-size: 14px;
+      max-width: 100%;
     }
   }
 </style>
@@ -192,37 +169,21 @@
 <body>
 
   <nav class="navbar">
-    <!-- Logo on the left -->
     <div class="logo-left">Ageflix</div>
 
-    <!-- Menu in the center -->
-    <ul>
-      <li>
-        <a href="#">About ▼</a>
-        <ul>
-          <li><a href="kids.html"><span class="icon">🧒</span>Kids</a></li>
-          <li><a href="adult.html"><span class="icon">🧑</span>Adult</a></li>
-          <li><a href="senior.html"><span class="icon">👴</span>Senior</a></li>
-        </ul>
-      </li>
-      <li>
-        <a href="movies.html">Movies ▼</a>
-        <ul>
-          <li><a href="kids.html"><span class="icon">🧒</span>Kids</a></li>
-          <li><a href="adult.html"><span class="icon">🧑</span>Adult</a></li>
-          <li><a href="senior.html"><span class="icon">👴</span>Senior</a></li>
-        </ul>
-      </li>
+    <button class="menu-btn" onclick="toggleMenu()">☰ Menu</button>
+
+    <ul id="nav-menu">
+      <li><a href="about.html">About</a></li>
+      <li><a href="movies.html">Movies</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
 
-    <!-- Text on the right -->
     <div class="logo-right">
       Discover movies for every age group!
     </div>
   </nav>
 
-  <!-- Project description -->
   <div class="project-info">
     <strong>Ageflix</strong> - This project uses the camera to detect age and recommends movies suitable for the user.
   </div>
@@ -241,6 +202,12 @@
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.4/dist/teachablemachine-image.min.js"></script>
 
   <script>
+    // Toggle menu function
+    function toggleMenu() {
+      const menu = document.getElementById("nav-menu");
+      menu.classList.toggle("show");
+    }
+
     const URL = "https://teachablemachine.withgoogle.com/models/UujRQ_OS4/";
     let model, webcam, maxPredictions;
 
