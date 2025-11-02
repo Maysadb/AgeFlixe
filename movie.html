@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Movie Details - Ageflix</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="navbar">
+  <div class="logo">Ageflix</div>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="movie-details" id="movie-details"></section>
+
+<script>
+const API_KEY = "22cb4298f71c93d5eb897e96b361b632";
+const urlParams = new URLSearchParams(window.location.search);
+const movieId = urlParams.get('id');
+
+async function getMovieDetails() {
+  const res = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&append_to_response=credits,videos`);
+  const data = await res.json();
+  const container = document.getElementById("movie-details");
+
+  const poster = data.poster_path 
+    ? `https://image.tmdb.org/t/p/w500${data.poster_path}`
+    : "https://via.placeholder.com/300x450?text=No+Image";
+
+  let trailer = "";
+  if (data.videos.results.length > 0) {
+    const trailerObj = data.videos.results.find(v => v.type === "Trailer" && v.site === "YouTube");
+    if(trailerObj) trailer = `<iframe src="https://www.youtube.com/embed/${trailerObj.key}" allowfullscreen></iframe>`;
+  }
+
+  const cast = data.credits.cast.slice(0,5).map(c => c.name).join(", ");
+
+  container.innerHTML = `
+    <h1>${data.title}</h1>
+    <div class="movie-info">
+      <img src="${poster}" alt="${data.title}">
+      <div class="details">
+        <p><strong>Overview:</strong> ${data.overview}</p>
+        <p><strong>Release Date:</strong> ${data.release_date}</p>
+        <p><strong>Cast:</strong> ${cast}</p>
+        ${trailer}
+      </div>
+    </div>
+  `;
+}
+
+getMovieDetails();
+</script>
+</body>
+</html>

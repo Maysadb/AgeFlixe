@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ageflix - Home</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">Ageflix</div>
+    <ul>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <h1>Welcome to Ageflix</h1>
+    <p>Discover movies according to your age group!</p>
+    
+    <!-- مكان Teachable Machine -->
+    <div id="webcam-container"></div>
+    <div id="label-container"></div>
+
+    <button id="startBtn">Start Camera & Detect Age</button>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.4/dist/teachablemachine-image.min.js"></script>
+
+  <script>
+    const URL = "https://teachablemachine.withgoogle.com/models/UujRQ_OS4/";
+    let model, webcam, maxPredictions;
+
+    async function init() {
+      const modelURL = URL + "model.json";
+      const metadataURL = URL + "metadata.json";
+      model = await tmImage.load(modelURL, metadataURL);
+      maxPredictions = model.getTotalClasses();
+
+      const flip = true;
+      webcam = new tmImage.Webcam(400, 300, flip);
+      await webcam.setup();
+      await webcam.play();
+      document.getElementById("webcam-container").appendChild(webcam.canvas);
+      window.requestAnimationFrame(loop);
+    }
+
+    async function loop() {
+      webcam.update();
+      await predict();
+      window.requestAnimationFrame(loop);
+    }
+
+    async function predict() {
+      const prediction = await model.predict(webcam.canvas);
+      let labelContainer = document.getElementById("label-container");
+      labelContainer.innerHTML = "";
+      prediction.forEach(p => {
+        labelContainer.innerHTML += `<p>${p.className}: ${(p.probability * 100).toFixed(2)}%</p>`;
+      });
+
+      // إذا احتمال أكثر من 80% نفتح الصفحة حسب الفئة
+      const best = prediction.reduce((a,b) => a.probability > b.probability ? a:b);
+      if(best.probability > 0.8){
+        if(best.className.toLowerCase() === "kids") window.location.href = "kids.html";
+        if(best.className.toLowerCase() === "adult") window.location.href = "adult.html";
+        if(best.className.toLowerCase() === "senior") window.location.href = "senior.html";
+      }
+    }
+
+    document.getElementById("startBtn").addEventListener("click", init);
+  </script>
+</body>
+</html>
