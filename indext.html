@@ -4,25 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ageflix - Home</title>
-
 <style>
   body {
-    font-family: 'Poppins', sans-serif;
     margin: 0;
-    padding: 0;
+    font-family: 'Arial', sans-serif;
     background-color: #121212;
     color: #fff;
-    overflow-x: hidden;
-  }
-
-  /* Background video */
-  .bg-video {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    object-fit: cover;
-    z-index: -1;
-    opacity: 0.25;
   }
 
   /* Navbar */
@@ -30,12 +17,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: #1c1c1c;
     padding: 12px 20px;
-    background: rgba(20, 20, 20, 0.8);
-    backdrop-filter: blur(10px);
     position: sticky;
     top: 0;
     z-index: 1000;
+    flex-wrap: wrap;
   }
 
   .logo-left {
@@ -44,177 +31,173 @@
     color: #e50914;
   }
 
+  .menu-btn {
+    display: none;
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+  }
+
   .navbar ul {
     list-style: none;
     display: flex;
-    gap: 20px;
+    align-items: center;
     margin: 0;
+    padding: 0;
+    transition: max-height 0.3s ease;
   }
 
-  .navbar a {
-    color: #fff;
+  .navbar ul li {
+    margin: 0 15px;
+  }
+
+  .navbar ul li a {
     text-decoration: none;
+    color: #fff;
     font-weight: bold;
-    transition: color 0.3s;
+    padding: 8px 5px;
   }
 
-  .navbar a:hover {
+  .navbar ul li a:hover {
     color: #e50914;
   }
 
-  /* Hero */
+  /* Hero section */
   .hero {
     text-align: center;
-    padding: 100px 20px 50px;
-    animation: fadeIn 2s ease;
+    padding: 50px 20px;
   }
 
-  .hero h1 { font-size: 48px; margin-bottom: 10px; }
-  .hero p { font-size: 20px; color: #ddd; }
+  #webcam-container, #label-container {
+    margin: 20px auto;
+  }
 
   #startBtn {
     margin-top: 20px;
-    padding: 14px 30px;
-    font-size: 20px;
+    padding: 14px 28px;
+    font-size: 18px;
     background-color: #e50914;
     border: none;
     border-radius: 6px;
     color: white;
     cursor: pointer;
-    transition: transform 0.3s;
-    animation: pulse 2s infinite;
   }
 
-  #startBtn:hover { transform: scale(1.05); }
-
-  /* Webcam cinematic container */
-  #webcam-container {
+  /* Slider */
+  .slider-container {
     position: relative;
-    display: inline-block;
-    border-radius: 12px;
-    padding: 10px;
-    background: radial-gradient(circle at center, #1b1b1b 30%, #000 100%);
-    box-shadow: 0 0 30px rgba(229,9,20,0.25), inset 0 0 25px rgba(255,255,255,0.05);
-    animation: glowPulse 3s ease-in-out infinite;
-  }
-
-  #webcam-container::after {
-    content: "";
-    position: absolute;
-    top: -3px;
-    left: -3px;
-    right: -3px;
-    bottom: -3px;
-    border-radius: 14px;
-    border: 2px solid rgba(229,9,20,0.4);
-    animation: borderGlow 2.5s ease-in-out infinite;
-  }
-
-  /* glowing animation */
-  @keyframes glowPulse {
-    0% { box-shadow: 0 0 25px rgba(229,9,20,0.2); }
-    50% { box-shadow: 0 0 45px rgba(229,9,20,0.4); }
-    100% { box-shadow: 0 0 25px rgba(229,9,20,0.2); }
-  }
-  @keyframes borderGlow {
-    0% { opacity: 0.3; transform: scale(1); }
-    50% { opacity: 0.7; transform: scale(1.03); }
-    100% { opacity: 0.3; transform: scale(1); }
-  }
-
-  /* Typing effect */
-  .detecting-text {
-    position: absolute;
-    top: -40px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #e50914;
-    font-size: 20px;
-    font-weight: 600;
-    white-space: nowrap;
+    margin: 40px 0;
     overflow: hidden;
-    border-right: 2px solid #e50914;
-    width: 0;
-    opacity: 0;
-    animation: typing 3s steps(30, end) infinite, blink 0.8s step-end infinite;
   }
 
-  @keyframes typing {
-    0% { width: 0; opacity: 1; }
-    50% { width: 260px; }
-    100% { width: 0; }
+  .slider-title {
+    font-size: 24px;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
   }
 
-  @keyframes blink {
-    50% { border-color: transparent; }
+  .slider-wrapper {
+    overflow: hidden;
   }
+
+  .slider {
+    display: flex;
+    transition: transform 0.5s ease;
+  }
+
+  .card {
+    position: relative;
+    width: 220px;
+    margin: 0 10px;
+    display: none;
+  }
+
+  .card img {
+    width: 100%;
+    border-radius: 10px;
+  }
+
+  .card video {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 10px;
+    display: none;
+  }
+
+  .card:hover video {
+    display: block;
+  }
+
+  .card-title {
+    text-align: center;
+    margin-top: 5px;
+    font-weight: bold;
+  }
+
+  .slider-btn {
+    position: absolute;
+    top: 40%;
+    font-size: 30px;
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  #prevBtn { left: 0; }
+  #nextBtn { right: 0; }
 
   /* Modal */
   .modal {
     display: none;
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.8);
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
     justify-content: center;
     align-items: center;
-    z-index: 2000;
   }
 
   .modal-content {
-    background: #1c1c1c;
+    background-color: #1c1c1c;
     padding: 30px;
-    border-radius: 12px;
+    border-radius: 10px;
     text-align: center;
-    width: 320px;
-    position: relative;
-    box-shadow: 0 0 20px rgba(0,0,0,0.4);
-    animation: popIn 0.5s ease;
-  }
-
-  .modal-content h2 { color: #e50914; }
-  .modal-content p { color: #ccc; }
-
-  .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 20px;
-    cursor: pointer;
     color: #fff;
   }
 
-  .close-btn:hover { color: #e50914; }
-
-  footer {
-    text-align: center;
-    padding: 20px;
-    color: #777;
-    font-size: 14px;
-    background-color: #1a1a1a;
+  .modal-content button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #e50914;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 6px;
   }
 
-  @keyframes popIn {
-    from { transform: scale(0.8); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-  }
-
-  @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(229,9,20, 0.4); }
-    70% { box-shadow: 0 0 0 15px rgba(229,9,20, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(229,9,20, 0); }
+  @media(max-width:768px){
+    .menu-btn{ display:block; }
+    .navbar ul { flex-direction: column; max-height:0; overflow:hidden;}
+    .navbar ul.show{ max-height:500px; }
+    .navbar ul li { margin:10px 0; }
   }
 </style>
 </head>
 <body>
 
-<video autoplay muted loop class="bg-video">
-  <source src="videos/background.mp4" type="video/mp4">
-</video>
-
 <nav class="navbar">
   <div class="logo-left">Ageflix</div>
-  <ul>
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+  <ul id="nav-menu">
     <li><a href="about.html">About</a></li>
     <li><a href="movies.html">Movies</a></li>
     <li><a href="contact.html">Contact</a></li>
@@ -223,142 +206,138 @@
 
 <section class="hero">
   <h1>Welcome to Ageflix</h1>
-  <p>Discover movies tailored to your age group</p>
-
-  <div id="webcam-wrapper" style="position: relative; display: inline-block;">
-    <div class="detecting-text" id="detectingText">🔍 Detecting your age group...</div>
-    <div id="webcam-container"></div>
-  </div>
-
+  <p>Discover movies according to your age group!</p>
+  
+  <div id="webcam-container"></div>
   <div id="label-container"></div>
-  <button id="startBtn">🎥 Start Detection</button>
+  <button id="startBtn">Start Camera & Detect Age</button>
 </section>
 
+<!-- Modal -->
 <div class="modal" id="ageModal">
   <div class="modal-content">
-    <span class="close-btn" id="closeModal">✖</span>
-    <h2 id="ageTitle">Age Group Detected</h2>
-    <p id="ageMessage">We will suggest movies suitable for you.</p>
+    <h2 id="modalText"></h2>
+    <button id="modalClose">OK</button>
   </div>
 </div>
 
-<footer>
-  © 2025 Ageflix — Made with ❤️ for movie lovers.
-</footer>
+<!-- Slider -->
+<section class="slider-container">
+  <div class="slider-title">Recommended Movies</div>
+  <div class="slider-wrapper">
+    <div class="slider" id="slider">
+      <div class="card" data-age="kids">
+        <img src="https://images.unsplash.com/photo-1542206395-9feb3edaa68f?auto=format&fit=crop&w=400&q=80" alt="Kids">
+        <video src="https://www.w3schools.com/html/movie.mp4" muted loop></video>
+        <div class="card-title">Kids Adventure</div>
+      </div>
+      <div class="card" data-age="adult">
+        <img src="https://images.unsplash.com/photo-1581905764498-86ae9c26a3c2?auto=format&fit=crop&w=400&q=80" alt="Adult">
+        <video src="https://www.w3schools.com/html/mov_bbb.mp4" muted loop></video>
+        <div class="card-title">Action Movie</div>
+      </div>
+      <div class="card" data-age="senior">
+        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80" alt="Senior">
+        <video src="https://www.w3schools.com/html/mov_bbb.mp4" muted loop></video>
+        <div class="card-title">Classic Film</div>
+      </div>
+    </div>
+  </div>
+  <button class="slider-btn" id="prevBtn">‹</button>
+  <button class="slider-btn" id="nextBtn">›</button>
+</section>
 
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.4/dist/teachablemachine-image.min.js"></script>
 <script>
-// === 🎵 Background hum (AI sound) ===
-let humCtx, humOsc, humGain;
-function startHum() {
-  humCtx = new (window.AudioContext || window.webkitAudioContext)();
-  humOsc = humCtx.createOscillator();
-  humGain = humCtx.createGain();
-  humOsc.type = "sine";
-  humOsc.frequency.setValueAtTime(180, humCtx.currentTime);
-  humGain.gain.setValueAtTime(0.05, humCtx.currentTime);
-  humOsc.connect(humGain);
-  humGain.connect(humCtx.destination);
-  humOsc.start();
-}
-function stopHum() {
-  if (humOsc && humGain) {
-    humGain.gain.exponentialRampToValueAtTime(0.0001, humCtx.currentTime + 0.5);
-    humOsc.stop(humCtx.currentTime + 0.6);
-  }
-}
-
-// === 🎵 Smart beep for each age group ===
-function playBeep(ageGroup) {
-  const ctx = new (window.AudioContext || window.webkitAudioContext)();
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-
-  let frequency = 880;
-  let duration = 0.25;
-
-  if (ageGroup.toLowerCase().includes("kids")) {
-    frequency = 1200; duration = 0.2;
-  } else if (ageGroup.toLowerCase().includes("adult")) {
-    frequency = 800; duration = 0.3;
-  } else if (ageGroup.toLowerCase().includes("senior")) {
-    frequency = 500; duration = 0.4;
+  function toggleMenu(){
+    document.getElementById('nav-menu').classList.toggle('show');
   }
 
-  osc.type = "sine";
-  osc.frequency.setValueAtTime(frequency, ctx.currentTime);
-  gain.gain.setValueAtTime(0.25, ctx.currentTime);
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.start();
-  osc.stop(ctx.currentTime + duration);
-}
+  const URL = "https://teachablemachine.withgoogle.com/models/UujRQ_OS4/";
+  let model, webcam, maxPredictions;
+  let detectedGroup = "";
+  let running = false;
 
-// === Teachable Machine setup ===
-const URL = "https://teachablemachine.withgoogle.com/models/UujRQ_OS4/";
-let model, webcam, maxPredictions, detectedGroup = "";
+  async function init(){
+    try{
+      running = true;
+      const modelURL = URL + "model.json";
+      const metadataURL = URL + "metadata.json";
+      model = await tmImage.load(modelURL, metadataURL);
+      maxPredictions = model.getTotalClasses();
 
-async function init() {
-  const modelURL = URL + "model.json";
-  const metadataURL = URL + "metadata.json";
-  model = await tmImage.load(modelURL, metadataURL);
-  maxPredictions = model.getTotalClasses();
-
-  webcam = new tmImage.Webcam(400, 300, true);
-  await webcam.setup();
-  await webcam.play();
-  document.getElementById("webcam-container").appendChild(webcam.canvas);
-
-  startHum();
-  document.getElementById("detectingText").style.opacity = "1";
-  document.getElementById("detectingText").style.animationPlayState = "running";
-
-  window.requestAnimationFrame(loop);
-}
-
-async function loop() {
-  webcam.update();
-  await predict();
-  window.requestAnimationFrame(loop);
-}
-
-async function predict() {
-  const prediction = await model.predict(webcam.canvas);
-  const best = prediction.reduce((a,b)=>a.probability > b.probability ? a:b);
-
-  if (best.probability > 0.85 && detectedGroup !== best.className) {
-    detectedGroup = best.className;
-
-    // Stop hum and play beep for detected group
-    stopHum();
-    playBeep(best.className);
-
-    const textEl = document.getElementById("detectingText");
-    textEl.innerText = "✅ Age group detected!";
-    textEl.style.animation = "none";
-    textEl.style.border = "none";
-
-    showModal(best.className);
+      webcam = new tmImage.Webcam(400,300,true);
+      await webcam.setup();
+      await webcam.play();
+      document.getElementById("webcam-container").appendChild(webcam.canvas);
+      window.requestAnimationFrame(loop);
+    } catch(err){
+      console.error(err);
+      alert("Failed to access camera. Allow permission & refresh.");
+    }
   }
-}
 
-function showModal(ageGroup) {
-  const modal = document.getElementById("ageModal");
-  document.getElementById("ageTitle").innerText = `Detected Age Group: ${ageGroup}`;
-  modal.style.display = "flex";
+  async function loop(){
+    if(!running) return;
+    webcam.update();
+    await predict();
+    window.requestAnimationFrame(loop);
+  }
 
-  document.getElementById("closeModal").onclick = () => {
-    modal.style.display = "none";
-    if(ageGroup.toLowerCase() === "kids") window.location.href = "kids.html";
-    if(ageGroup.toLowerCase() === "adult") window.location.href = "adult.html";
-    if(ageGroup.toLowerCase() === "senior") window.location.href = "senior.html";
-  };
-}
+  async function predict(){
+    const prediction = await model.predict(webcam.canvas);
+    const best = prediction.reduce((a,b)=> a.probability>b.probability?a:b);
+    if(best.probability>0.85 && detectedGroup!==best.className){
+      detectedGroup = best.className.toLowerCase();
+      showModal(detectedGroup);
+      filterSlider(detectedGroup);
+    }
+  }
 
-document.getElementById("startBtn").addEventListener("click", init);
+  function showModal(group){
+    const modal = document.getElementById("ageModal");
+    const text = document.getElementById("modalText");
+    text.innerHTML = `Detected age group: <strong>${group}</strong><br>We will suggest movies suitable for you.`;
+    modal.style.display = "flex";
+  }
+
+  document.getElementById("modalClose").addEventListener("click", ()=>{
+    document.getElementById("ageModal").style.display = "none";
+  });
+
+  document.getElementById("startBtn").addEventListener("click", init);
+
+  // Filter Slider
+  function filterSlider(group){
+    const cards = document.querySelectorAll('#slider .card');
+    cards.forEach(card=>{
+      if(card.dataset.age===group) card.style.display='block';
+      else card.style.display='none';
+    });
+  }
+
+  // Slider Controls
+  const slider = document.getElementById('slider');
+  const nextBtn = document.getElementById('nextBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  let index = 0;
+  const cardWidth = 240;
+
+  nextBtn.addEventListener('click', ()=>{ index++; moveSlider(); });
+  prevBtn.addEventListener('click', ()=>{ index--; moveSlider(); });
+
+  function moveSlider(){
+    if(index<0) index=0;
+    if(index>slider.children.length-1) index=slider.children.length-1;
+    slider.style.transform = `translateX(${-index*cardWidth}px)`;
+  }
+
+  setInterval(()=>{
+    index++;
+    if(index>slider.children.length-1) index=0;
+    moveSlider();
+  },4000);
 </script>
-
 </body>
 </html>
