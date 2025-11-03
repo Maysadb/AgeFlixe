@@ -159,22 +159,24 @@
 
       const best = prediction.reduce((a,b)=>a.probability>b.probability?a:b);
       if(best.probability > 0.8){
-        // عرض رسالة قبل التحويل
         let message = "";
         let page = "";
-        if(best.className.toLowerCase() === "kids") { 
-          message = "تم تحديد أنك طفل. سيتم تحويلك إلى صفحة الأطفال.";
+        const cls = best.className.toLowerCase();
+
+        if(cls === "kids") { 
+          message = "You are identified as a kid. Redirecting to the kids page...";
           page = "kids.html";
         }
-        if(best.className.toLowerCase() === "adult") { 
-          message = "تم تحديد أنك بالغ. سيتم تحويلك إلى صفحة البالغين.";
+        if(cls === "adult") { 
+          message = "You are identified as an adult. Redirecting to the adult page...";
           page = "adult.html";
         }
-        if(best.className.toLowerCase() === "senior") { 
-          message = "تم تحديد أنك كبير السن. سيتم تحويلك إلى صفحة الكبار.";
+        if(cls === "senior") { 
+          message = "You are identified as a senior. Redirecting to the senior page...";
           page = "senior.html";
         }
 
+        // Show alert once, then redirect
         alert(message);
         window.location.href = page;
       }
@@ -182,7 +184,7 @@
 
     document.getElementById("startBtn").addEventListener("click", init);
 
-    // Banner Slider JS
+    // Banner Slider
     const slides = document.querySelectorAll('.slide');
     const prev = document.querySelector('.prev');
     const next = document.querySelector('.next');
@@ -205,7 +207,6 @@
     prev.addEventListener('click', ()=> showSlide(slideIndex-1));
     next.addEventListener('click', ()=> showSlide(slideIndex+1));
 
-    // Dots
     slides.forEach((_,i)=>{
       const dot = document.createElement('span');
       dot.classList.add('dot');
@@ -230,7 +231,7 @@
       marqueeIndex = (marqueeIndex+1) % marqueeMessages.length;
     }
 
-    setInterval(updateMarquee, 5000); // Change text every 5 seconds
+    setInterval(updateMarquee, 5000);
     updateMarquee();
   </script>
 
