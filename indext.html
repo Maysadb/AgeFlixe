@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ageflix - Home</title>
   <style>
-    /* Reset & basic */
     * { box-sizing: border-box; margin:0; padding:0; font-family: Arial, sans-serif; }
-
     body { background: #f0f0f0; }
 
     /* Navbar */
@@ -20,29 +18,23 @@
       padding: 10px 20px;
       flex-wrap: wrap;
     }
-
-    .navbar .logo { font-size: 24px; font-weight: bold; flex: 1; }
+    .navbar .logo { font-size: 24px; font-weight: bold; flex: 1; color: red; }
     .navbar ul { display: flex; list-style: none; justify-content: center; flex:2; }
     .navbar ul li { margin: 0 15px; }
     .navbar ul li a { color:#fff; text-decoration: none; font-weight: bold; }
     .navbar .icon { flex: 1; text-align: right; }
 
-    /* Hero / Webcam */
-    section.hero {
+    /* Project description text */
+    .project-text {
       text-align: center;
-      padding: 20px;
-    }
-
-    section.hero h1 { font-size: 32px; margin-bottom: 10px; }
-    section.hero p { font-size: 20px; margin-bottom: 20px; }
-
-    button#startBtn {
-      padding: 10px 20px;
-      font-size: 18px;
+      margin: 15px 0;
+      font-size: 22px;
+      font-weight: bold;
+      color: #111;
       cursor: pointer;
+      transition: color 0.5s ease;
     }
-
-    #webcam-container, #label-container { margin: 15px auto; }
+    .project-text:hover { color: #e63946; }
 
     /* Banner Slider */
     .banner-slider { position: relative; overflow: hidden; max-width: 100%; height: 400px; margin-bottom:20px; background:#000; }
@@ -63,7 +55,6 @@
       transition: all 1s ease-in-out;
     }
     .slide.active .slide-text { opacity: 1; }
-
     .slide-left { transform: translateX(-100%) translateY(0); }
     .slide.active .slide-left { transform: translateX(-50%) translateY(0); }
     .slide-right { transform: translateX(100%) translateY(0); }
@@ -79,6 +70,13 @@
     .dot { width: 12px; height: 12px; border-radius: 50%; background-color: rgba(255,255,255,0.5); cursor: pointer; }
     .dot.active { background-color: #fff; }
 
+    /* Hero / Webcam */
+    section.hero { text-align: center; padding: 20px; }
+    section.hero h1 { font-size: 32px; margin-bottom: 10px; }
+    section.hero p { font-size: 20px; margin-bottom: 20px; }
+    button#startBtn { padding: 10px 20px; font-size: 18px; cursor: pointer; }
+    #webcam-container, #label-container { margin: 15px auto; }
+
     /* Responsive */
     @media(max-width:768px){
       .navbar ul { flex: 1; justify-content: space-around; margin:10px 0; }
@@ -86,6 +84,7 @@
       section.hero p { font-size: 16px; }
       .slide-text { font-size: 18px; }
       button#startBtn { font-size: 16px; }
+      .project-text { font-size: 18px; }
     }
   </style>
 </head>
@@ -101,6 +100,9 @@
     </ul>
     <div class="icon">🎬</div>
   </nav>
+
+  <!-- Project Description -->
+  <div class="project-text" id="projectText">Ageflix recommends movies based on your age</div>
 
   <!-- Banner Slider -->
   <section class="banner-slider">
@@ -121,7 +123,7 @@
     <button id="startBtn">Start Camera & Detect Age</button>
   </section>
 
-  <!-- TensorFlow + Teachable Machine -->
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.4/dist/teachablemachine-image.min.js"></script>
 
@@ -201,25 +203,38 @@
 
     function showSlide(index){
       slideIndex = index < 0 ? banners.length-1 : index >= banners.length ? 0 : index;
-      banners.forEach((slide,i)=>slide.classList.toggle('active', i===slideIndex));
-      document.querySelectorAll('.dot').forEach((dot,i)=>dot.classList.toggle('active', i===slideIndex));
+      banners.forEach((s,i)=>{
+        s.classList.remove('active');
+        slider.querySelectorAll('.dot')[i].classList.remove('active');
+      });
+      banners[slideIndex].classList.add('active');
+      slider.querySelectorAll('.dot')[slideIndex].classList.add('active');
     }
 
-    document.querySelector('.next').addEventListener('click', ()=>showSlide(slideIndex+1));
-    document.querySelector('.prev').addEventListener('click', ()=>showSlide(slideIndex-1));
-    setInterval(()=>showSlide(slideIndex+1),5000);
+    document.querySelector('.prev').addEventListener('click',()=>showSlide(slideIndex-1));
+    document.querySelector('.next').addEventListener('click',()=>showSlide(slideIndex+1));
 
     uploadInput.addEventListener('change', (e)=>{
-      const files = Array.from(e.target.files);
-      files.forEach((file)=>{
+      Array.from(e.target.files).forEach(file=>{
         const reader = new FileReader();
-        reader.onload = function(event){
-          const anims = ['slide-left','slide-right','slide-zoom'];
-          createSlide(event.target.result, `Banner ${banners.length+1}`, anims[banners.length % 3], banners.length===0);
-        };
+        reader.onload = () => createSlide(reader.result, 'Ageflix recommends movies based on your age');
         reader.readAsDataURL(file);
       });
     });
+
+    // Project Text Click Change
+    const projectTexts = [
+      "Ageflix recommends movies based on your age",
+      "Find the perfect movie for kids, adults, and seniors",
+      "Your personalized movie guide!",
+      "Discover films suitable for your age"
+    ];
+    const projectTextElem = document.getElementById('projectText');
+    projectTextElem.addEventListener('click', ()=>{
+      const current = projectTexts.indexOf(projectTextElem.innerText);
+      projectTextElem.innerText = projectTexts[(current+1)%projectTexts.length];
+    });
   </script>
+
 </body>
 </html>
