@@ -5,129 +5,98 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ageflix - Home</title>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      overflow-x: hidden;
-      background: #111;
-      color: #fff;
-    }
+    * { box-sizing: border-box; margin:0; padding:0; font-family: Arial, sans-serif; }
+    body { background: #f0f0f0; }
 
     /* Navbar */
-    .navbar {
+    nav.navbar {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      padding: 15px 20px;
-      background: #222;
+      justify-content: space-between;
+      background-color: #111;
+      color: #fff;
+      padding: 10px 20px;
       flex-wrap: wrap;
     }
+    .navbar .logo { font-size: 24px; font-weight: bold; flex: 1; color: red; }
+    .navbar ul { display: flex; list-style: none; justify-content: center; flex:2; }
+    .navbar ul li { margin: 0 15px; }
+    .navbar ul li a { color:#fff; text-decoration: none; font-weight: bold; }
+    .navbar .icon { flex: 1; text-align: right; }
 
-    .logo {
-      font-size: 28px;
-      font-weight: bold;
-      color: red;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .nav-links a {
-      color: white;
-      text-decoration: none;
-      font-size: 18px;
-      transition: 0.3s;
-    }
-
-    .nav-links a:hover {
-      color: red;
-    }
-
-    /* News ticker */
-    .news-ticker {
+    /* Project description / marquee */
+    .marquee-container {
       width: 100%;
-      background: #333;
-      white-space: nowrap;
       overflow: hidden;
-      box-sizing: border-box;
+      background: #222;
+      color: #fff;
+      font-size: 22px;
       padding: 10px 0;
-      font-size: 18px;
-      color: yellow;
       position: relative;
     }
-
-    .news-ticker span {
+    .marquee {
       display: inline-block;
-      padding-left: 100%;
-      animation: ticker 15s linear infinite;
+      white-space: nowrap;
+      animation: marquee 15s linear infinite;
     }
-
-    @keyframes ticker {
-      0% { transform: translateX(0); }
+    @keyframes marquee {
+      0% { transform: translateX(100%); }
       100% { transform: translateX(-100%); }
     }
 
-    /* Hero section */
-    .hero {
-      text-align: center;
-      padding: 40px 20px;
-    }
-
-    #webcam-container {
-      margin: 20px auto;
-      width: 320px;
-      max-width: 100%;
-    }
-
-    #label-container p {
-      margin: 5px 0;
-    }
+    /* Hero / Webcam */
+    section.hero { text-align: center; padding: 20px; }
+    section.hero h1 { font-size: 32px; margin-bottom: 10px; }
+    section.hero p { font-size: 20px; margin-bottom: 20px; }
+    button#startBtn { padding: 10px 20px; font-size: 18px; cursor: pointer; }
+    #webcam-container, #label-container { margin: 15px auto; }
 
     /* Responsive */
-    @media (max-width: 768px) {
-      .nav-links {
-        justify-content: center;
-        gap: 15px;
-      }
+    @media(max-width:768px){
+      .navbar ul { flex: 1; justify-content: space-around; margin:10px 0; }
+      section.hero h1 { font-size: 24px; }
+      section.hero p { font-size: 16px; }
+      button#startBtn { font-size: 16px; }
+      .marquee-container { font-size: 18px; }
     }
   </style>
 </head>
 <body>
+
   <!-- Navbar -->
   <nav class="navbar">
     <div class="logo">Ageflix</div>
-    <div class="nav-links">
-      <a href="about.html">About</a>
-      <a href="movies.html">Movies</a>
-      <a href="contact.html">Contact</a>
-    </div>
+    <ul>
+      <li><a href="about.html">About</a></li>
+      <li><a href="movies.html">Movies</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="icon">🎬</div>
   </nav>
 
-  <!-- News Ticker -->
-  <div class="news-ticker">
-    <span id="ticker-text">Welcome to Ageflix! We suggest movies based on your age group! | Fun for Kids, Adults & Seniors! | Enjoy personalized movie recommendations!</span>
+  <!-- Marquee / Moving Text -->
+  <div class="marquee-container">
+    <div class="marquee" id="marqueeText"></div>
   </div>
 
-  <!-- Hero Section -->
+  <!-- Hero / Age Detection -->
   <section class="hero">
-    <h1>Discover Movies by Your Age!</h1>
-    <p>Camera will detect your age and suggest the best movies for you.</p>
+    <h1>Welcome to Ageflix</h1>
+    <p>Discover movies according to your age group!</p>
 
-    <!-- Webcam container -->
+    <!-- Teachable Machine Webcam -->
     <div id="webcam-container"></div>
     <div id="label-container"></div>
 
     <button id="startBtn">Start Camera & Detect Age</button>
   </section>
 
-  <!-- TensorFlow & Teachable Machine -->
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.4/dist/teachablemachine-image.min.js"></script>
 
   <script>
+    // Age Detection
     const URL = "https://teachablemachine.withgoogle.com/models/UujRQ_OS4/";
     let model, webcam, maxPredictions;
 
@@ -167,22 +136,32 @@
         else if(best.className.toLowerCase()==="adult") { message="You are an Adult!"; page="adult.html"; }
         else if(best.className.toLowerCase()==="senior") { message="You are a Senior!"; page="senior.html"; }
 
-        // Play a small beep sound
-        const audio = new Audio('https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg');
-        audio.play();
-
         alert(message);
-
-        // Fade out + zoom effect
-        document.body.style.transition = "opacity 1.5s, transform 1.5s";
-        document.body.style.opacity = 0;
-        document.body.style.transform = "scale(1.2)";
-        
-        setTimeout(()=>{ window.location.href = page; }, 1500);
+        window.location.href = page;
       }
     }
 
     document.getElementById("startBtn").addEventListener("click", init);
+
+    // Marquee / Moving Text
+    const marqueeTextElem = document.getElementById('marqueeText');
+    const marqueeMessages = [
+      "Ageflix recommends movies based on your age",
+      "Find the perfect movie for kids, adults, and seniors",
+      "Your personalized movie guide!",
+      "Discover films suitable for your age",
+      "Enjoy movies safely with Ageflix"
+    ];
+    let marqueeIndex = 0;
+
+    function updateMarquee(){
+      marqueeTextElem.innerText = marqueeMessages[marqueeIndex];
+      marqueeIndex = (marqueeIndex+1) % marqueeMessages.length;
+    }
+
+    setInterval(updateMarquee, 5000);
+    updateMarquee();
   </script>
+
 </body>
 </html>
