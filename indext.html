@@ -5,191 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ageflix - Home</title>
 <style>
-  body {
-    margin: 0;
-    font-family: 'Arial', sans-serif;
-    background-color: #121212;
-    color: #fff;
-  }
-
-  /* Navbar */
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #1c1c1c;
-    padding: 12px 20px;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    flex-wrap: wrap;
-  }
-
-  .logo-left {
-    font-size: 28px;
-    font-weight: bold;
-    color: #e50914;
-  }
-
-  .menu-btn {
-    display: none;
-    font-size: 24px;
-    background: none;
-    border: none;
-    color: #fff;
-    cursor: pointer;
-  }
-
-  .navbar ul {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-    transition: max-height 0.3s ease;
-  }
-
-  .navbar ul li {
-    margin: 0 15px;
-  }
-
-  .navbar ul li a {
-    text-decoration: none;
-    color: #fff;
-    font-weight: bold;
-    padding: 8px 5px;
-  }
-
-  .navbar ul li a:hover {
-    color: #e50914;
-  }
-
-  /* Hero section */
-  .hero {
-    text-align: center;
-    padding: 50px 20px;
-  }
-
-  #webcam-container, #label-container {
-    margin: 20px auto;
-  }
-
-  #startBtn {
-    margin-top: 20px;
-    padding: 14px 28px;
-    font-size: 18px;
-    background-color: #e50914;
-    border: none;
-    border-radius: 6px;
-    color: white;
-    cursor: pointer;
-  }
-
-  /* Slider */
-  .slider-container {
-    position: relative;
-    margin: 40px 0;
-    overflow: hidden;
-  }
-
-  .slider-title {
-    font-size: 24px;
-    margin-left: 20px;
-    margin-bottom: 10px;
-    font-weight: bold;
-  }
-
-  .slider-wrapper {
-    overflow: hidden;
-  }
-
-  .slider {
-    display: flex;
-    transition: transform 0.5s ease;
-  }
-
-  .card {
-    position: relative;
-    width: 220px;
-    margin: 0 10px;
-    display: none;
-  }
-
-  .card img {
-    width: 100%;
-    border-radius: 10px;
-  }
-
-  .card video {
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    border-radius: 10px;
-    display: none;
-  }
-
-  .card:hover video {
-    display: block;
-  }
-
-  .card-title {
-    text-align: center;
-    margin-top: 5px;
-    font-weight: bold;
-  }
-
-  .slider-btn {
-    position: absolute;
-    top: 40%;
-    font-size: 30px;
-    background: none;
-    border: none;
-    color: #fff;
-    cursor: pointer;
-  }
-
-  #prevBtn { left: 0; }
-  #nextBtn { right: 0; }
-
-  /* Modal */
-  .modal {
-    display: none;
-    position: fixed;
-    z-index: 2000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.8);
-    justify-content: center;
-    align-items: center;
-  }
-
-  .modal-content {
-    background-color: #1c1c1c;
-    padding: 30px;
-    border-radius: 10px;
-    text-align: center;
-    color: #fff;
-  }
-
-  .modal-content button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #e50914;
-    border: none;
-    color: #fff;
-    cursor: pointer;
-    border-radius: 6px;
-  }
-
-  @media(max-width:768px){
-    .menu-btn{ display:block; }
-    .navbar ul { flex-direction: column; max-height:0; overflow:hidden;}
-    .navbar ul.show{ max-height:500px; }
-    .navbar ul li { margin:10px 0; }
-  }
+  body { margin:0; font-family: Arial, sans-serif; background:#121212; color:#fff; }
+  .navbar { display:flex; justify-content:space-between; align-items:center; background:#1c1c1c; padding:12px 20px; position:sticky; top:0; z-index:1000; flex-wrap:wrap; }
+  .logo-left { font-size:28px; font-weight:bold; color:#e50914; }
+  .menu-btn { display:none; font-size:24px; background:none; border:none; color:#fff; cursor:pointer; }
+  .navbar ul { list-style:none; display:flex; align-items:center; margin:0; padding:0; }
+  .navbar ul li { margin:0 15px; }
+  .navbar ul li a { text-decoration:none; color:#fff; font-weight:bold; padding:8px 5px; }
+  .navbar ul li a:hover { color:#e50914; }
+  .hero { text-align:center; padding:50px 20px; }
+  #webcam-container { margin:20px auto; }
+  #startBtn { margin-top:20px; padding:14px 28px; font-size:18px; background:#e50914; border:none; border-radius:6px; color:#fff; cursor:pointer; }
+  /* Modal Styles */
+  .modal { display:none; position:fixed; z-index:2000; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.8); }
+  .modal-content { background:#1c1c1c; margin:15% auto; padding:30px; border-radius:10px; width:90%; max-width:400px; text-align:center; color:#fff; }
+  .modal-content h2 { color:#e50914; margin-bottom:20px; }
+  .modal-content button { margin-top:20px; padding:12px 24px; font-size:16px; background:#e50914; border:none; border-radius:6px; color:#fff; cursor:pointer; }
+  .modal-content button:hover { background:#b00610; }
+  @media(max-width:768px){ .menu-btn{display:block;} .navbar ul{flex-direction:column; max-height:0; overflow:hidden;} .navbar ul.show{max-height:500px;} .navbar ul li{margin:10px 0;} }
 </style>
 </head>
 <body>
@@ -207,137 +40,81 @@
 <section class="hero">
   <h1>Welcome to Ageflix</h1>
   <p>Discover movies according to your age group!</p>
-  
   <div id="webcam-container"></div>
-  <div id="label-container"></div>
   <button id="startBtn">Start Camera & Detect Age</button>
 </section>
 
 <!-- Modal -->
-<div class="modal" id="ageModal">
+<div id="ageModal" class="modal">
   <div class="modal-content">
-    <h2 id="modalText"></h2>
-    <button id="modalClose">OK</button>
+    <h2 id="ageGroupText">Age Group</h2>
+    <p>We will suggest movies suitable for you.</p>
+    <button id="okBtn">OK</button>
   </div>
 </div>
 
-<!-- Slider -->
-<section class="slider-container">
-  <div class="slider-title">Recommended Movies</div>
-  <div class="slider-wrapper">
-    <div class="slider" id="slider">
-      <div class="card" data-age="kids">
-        <img src="https://images.unsplash.com/photo-1542206395-9feb3edaa68f?auto=format&fit=crop&w=400&q=80" alt="Kids">
-        <video src="https://www.w3schools.com/html/movie.mp4" muted loop></video>
-        <div class="card-title">Kids Adventure</div>
-      </div>
-      <div class="card" data-age="adult">
-        <img src="https://images.unsplash.com/photo-1581905764498-86ae9c26a3c2?auto=format&fit=crop&w=400&q=80" alt="Adult">
-        <video src="https://www.w3schools.com/html/mov_bbb.mp4" muted loop></video>
-        <div class="card-title">Action Movie</div>
-      </div>
-      <div class="card" data-age="senior">
-        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80" alt="Senior">
-        <video src="https://www.w3schools.com/html/mov_bbb.mp4" muted loop></video>
-        <div class="card-title">Classic Film</div>
-      </div>
-    </div>
-  </div>
-  <button class="slider-btn" id="prevBtn">‹</button>
-  <button class="slider-btn" id="nextBtn">›</button>
-</section>
-
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.4/dist/teachablemachine-image.min.js"></script>
+
 <script>
-  function toggleMenu(){
-    document.getElementById('nav-menu').classList.toggle('show');
+function toggleMenu() {
+  document.getElementById('nav-menu').classList.toggle('show');
+}
+
+const URL = "https://teachablemachine.withgoogle.com/models/UujRQ_OS4/";
+let model, webcam, maxPredictions;
+let detected = false;
+
+async function init(){
+  if(detected) return;
+  detected = true;
+  const modelURL = URL + "model.json";
+  const metadataURL = URL + "metadata.json";
+  model = await tmImage.load(modelURL, metadataURL);
+  maxPredictions = model.getTotalClasses();
+
+  webcam = new tmImage.Webcam(400,300,true);
+  await webcam.setup();
+  await webcam.play();
+  document.getElementById("webcam-container").appendChild(webcam.canvas);
+  window.requestAnimationFrame(loop);
+}
+
+async function loop(){
+  webcam.update();
+  await predict();
+  window.requestAnimationFrame(loop);
+}
+
+async function predict(){
+  const prediction = await model.predict(webcam.canvas);
+  const best = prediction.reduce((a,b)=> a.probability>b.probability?a:b);
+  if(best.probability>0.85){
+    let group = best.className.toLowerCase();
+    showModal(group);
   }
+}
 
-  const URL = "https://teachablemachine.withgoogle.com/models/UujRQ_OS4/";
-  let model, webcam, maxPredictions;
-  let detectedGroup = "";
-  let running = false;
+function showModal(group){
+  let ageText = "";
+  let page = "";
+  if(group==="kids"){ ageText="Kids"; page="kids.html"; }
+  else if(group==="adult"){ ageText="Adult"; page="adult.html"; }
+  else if(group==="senior"){ ageText="Senior"; page="senior.html"; }
 
-  async function init(){
-    try{
-      running = true;
-      const modelURL = URL + "model.json";
-      const metadataURL = URL + "metadata.json";
-      model = await tmImage.load(modelURL, metadataURL);
-      maxPredictions = model.getTotalClasses();
+  const modal = document.getElementById("ageModal");
+  const ageGroupText = document.getElementById("ageGroupText");
+  ageGroupText.textContent = `Detected age group: ${ageText}`;
+  modal.style.display = "block";
 
-      webcam = new tmImage.Webcam(400,300,true);
-      await webcam.setup();
-      await webcam.play();
-      document.getElementById("webcam-container").appendChild(webcam.canvas);
-      window.requestAnimationFrame(loop);
-    } catch(err){
-      console.error(err);
-      alert("Failed to access camera. Allow permission & refresh.");
-    }
-  }
+  document.getElementById("okBtn").onclick = function(){
+    modal.style.display = "none";
+    window.location.href = page;
+  };
+}
 
-  async function loop(){
-    if(!running) return;
-    webcam.update();
-    await predict();
-    window.requestAnimationFrame(loop);
-  }
-
-  async function predict(){
-    const prediction = await model.predict(webcam.canvas);
-    const best = prediction.reduce((a,b)=> a.probability>b.probability?a:b);
-    if(best.probability>0.85 && detectedGroup!==best.className){
-      detectedGroup = best.className.toLowerCase();
-      showModal(detectedGroup);
-      filterSlider(detectedGroup);
-    }
-  }
-
-  function showModal(group){
-    const modal = document.getElementById("ageModal");
-    const text = document.getElementById("modalText");
-    text.innerHTML = `Detected age group: <strong>${group}</strong><br>We will suggest movies suitable for you.`;
-    modal.style.display = "flex";
-  }
-
-  document.getElementById("modalClose").addEventListener("click", ()=>{
-    document.getElementById("ageModal").style.display = "none";
-  });
-
-  document.getElementById("startBtn").addEventListener("click", init);
-
-  // Filter Slider
-  function filterSlider(group){
-    const cards = document.querySelectorAll('#slider .card');
-    cards.forEach(card=>{
-      if(card.dataset.age===group) card.style.display='block';
-      else card.style.display='none';
-    });
-  }
-
-  // Slider Controls
-  const slider = document.getElementById('slider');
-  const nextBtn = document.getElementById('nextBtn');
-  const prevBtn = document.getElementById('prevBtn');
-  let index = 0;
-  const cardWidth = 240;
-
-  nextBtn.addEventListener('click', ()=>{ index++; moveSlider(); });
-  prevBtn.addEventListener('click', ()=>{ index--; moveSlider(); });
-
-  function moveSlider(){
-    if(index<0) index=0;
-    if(index>slider.children.length-1) index=slider.children.length-1;
-    slider.style.transform = `translateX(${-index*cardWidth}px)`;
-  }
-
-  setInterval(()=>{
-    index++;
-    if(index>slider.children.length-1) index=0;
-    moveSlider();
-  },4000);
+document.getElementById("startBtn").addEventListener("click", init);
 </script>
+
 </body>
 </html>
