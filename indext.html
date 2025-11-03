@@ -1,266 +1,225 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ageflix - Home</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #121212;
-    color: #fff;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ageflix - Home</title>
+  <style>
+    /* Reset & basic */
+    * { box-sizing: border-box; margin:0; padding:0; font-family: Arial, sans-serif; }
 
-  /* Banner Slider with Fade */
-  .banner-slider {
-    position: relative;
-    width: 100%;
-    max-height: 300px;
-    overflow: hidden;
-  }
+    body { background: #f0f0f0; }
 
-  .slide {
-    position: absolute;
-    width: 100%;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
-  }
+    /* Navbar */
+    nav.navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #111;
+      color: #fff;
+      padding: 10px 20px;
+      flex-wrap: wrap;
+    }
 
-  .slide img {
-    width: 100%;
-    display: block;
-    object-fit: cover;
-  }
+    .navbar .logo { font-size: 24px; font-weight: bold; flex: 1; }
+    .navbar ul { display: flex; list-style: none; justify-content: center; flex:2; }
+    .navbar ul li { margin: 0 15px; }
+    .navbar ul li a { color:#fff; text-decoration: none; font-weight: bold; }
+    .navbar .icon { flex: 1; text-align: right; }
 
-  .slide.active { opacity: 1; z-index: 1; }
+    /* Hero / Webcam */
+    section.hero {
+      text-align: center;
+      padding: 20px;
+    }
 
-  /* Buttons */
-  .prev, .next {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 36px;
-    color: white;
-    background: rgba(0,0,0,0.3);
-    border: none;
-    padding: 10px 16px;
-    cursor: pointer;
-    border-radius: 3px;
-    z-index: 10;
-  }
+    section.hero h1 { font-size: 32px; margin-bottom: 10px; }
+    section.hero p { font-size: 20px; margin-bottom: 20px; }
 
-  .prev { left: 10px; }
-  .next { right: 10px; }
+    button#startBtn {
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+    }
 
-  .prev:hover, .next:hover { background: rgba(0,0,0,0.6); }
+    #webcam-container, #label-container { margin: 15px auto; }
 
-  /* Dots */
-  .dots {
-    text-align: center;
-    position: absolute;
-    bottom: 12px;
-    width: 100%;
-  }
+    /* Banner Slider */
+    .banner-slider { position: relative; overflow: hidden; max-width: 100%; height: 400px; margin-bottom:20px; background:#000; }
+    .banner-slider input[type="file"] { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 4; }
+    .slide { position: absolute; width: 100%; height: 100%; opacity: 0; transition: opacity 1s ease-in-out; }
+    .slide.active { opacity: 1; z-index: 2; }
+    .slide img { width: 100%; height: 100%; object-fit: cover; }
+    .slide-text {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #fff;
+      font-size: 24px;
+      font-weight: bold;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+      opacity: 0;
+      transition: all 1s ease-in-out;
+    }
+    .slide.active .slide-text { opacity: 1; }
 
-  .dot {
-    display: inline-block;
-    height: 12px;
-    width: 12px;
-    margin: 0 4px;
-    background-color: #bbb;
-    border-radius: 50%;
-    cursor: pointer;
-  }
+    .slide-left { transform: translateX(-100%) translateY(0); }
+    .slide.active .slide-left { transform: translateX(-50%) translateY(0); }
+    .slide-right { transform: translateX(100%) translateY(0); }
+    .slide.active .slide-right { transform: translateX(-50%) translateY(0); }
+    .slide-zoom { transform: translateX(-50%) scale(0.5); }
+    .slide.active .slide-zoom { transform: translateX(-50%) scale(1); }
 
-  .dot.active { background-color: #e50914; }
+    .prev, .next { position: absolute; top: 50%; transform: translateY(-50%); background-color: rgba(0,0,0,0.5); color: #fff; border: none; padding: 10px; cursor: pointer; font-size: 24px; z-index: 3; }
+    .prev { left: 10px; }
+    .next { right: 10px; }
 
-  /* Navbar */
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 20px;
-    background-color: rgba(28,28,28,0.9);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    flex-wrap: wrap;
-  }
+    .dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 3; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; background-color: rgba(255,255,255,0.5); cursor: pointer; }
+    .dot.active { background-color: #fff; }
 
-  .logo-left { font-size: 28px; font-weight: bold; color: #e50914; }
-  .logo-right { font-size: 16px; color: #ddd; max-width: 250px; text-align: right; }
-
-  /* Menu button for mobile */
-  .menu-btn { display: none; font-size: 24px; background: none; border: none; color: #fff; cursor: pointer; }
-
-  .navbar ul {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-    transition: max-height 0.3s ease;
-  }
-
-  .navbar ul li { margin: 0 15px; }
-  .navbar ul li a { text-decoration: none; color: #fff; font-weight: bold; padding: 8px 5px; transition: color 0.3s, transform 0.2s; }
-  .navbar ul li a:hover { color: #e50914; transform: translateY(-2px); }
-
-  /* Project description */
-  .project-info {
-    background-color: #1c1c1c;
-    padding: 20px;
-    margin: 20px auto;
-    max-width: 700px;
-    border-radius: 10px;
-    text-align: center;
-    font-size: 18px;
-    color: #ddd;
-  }
-
-  .project-info strong { color: #e50914; font-size: 22px; }
-
-  /* Hero section */
-  .hero { text-align: center; padding: 50px 20px; }
-  #webcam-container, #label-container { margin: 20px auto; }
-  #startBtn {
-    margin-top: 20px; padding: 14px 28px; font-size: 18px;
-    background-color: #e50914; border: none; border-radius: 6px; color: white;
-    cursor: pointer; transition: background 0.3s, transform 0.2s;
-  }
-  #startBtn:hover { background-color: #b00610; transform: scale(1.05); }
-
-  /* Responsive for mobile */
-  @media (max-width: 768px) {
-    .menu-btn { display: block; }
-    .navbar ul { flex-direction: column; width: 100%; max-height: 0; overflow: hidden; }
-    .navbar ul.show { max-height: 500px; }
-    .navbar ul li { margin: 10px 0; }
-    .logo-right { text-align: left; margin-top: 12px; width: 100%; }
-    #startBtn { width: 90%; font-size: 20px; padding: 16px; }
-  }
-  @media (max-width: 480px) {
-    .hero { padding: 40px 10px; }
-    .project-info { padding: 15px; font-size: 16px; }
-    .logo-left { font-size: 24px; }
-    .logo-right { font-size: 14px; max-width: 100%; }
-    .banner-slider { max-height: 150px; }
-    .prev, .next { font-size: 24px; padding: 6px 10px; }
-  }
-</style>
+    /* Responsive */
+    @media(max-width:768px){
+      .navbar ul { flex: 1; justify-content: space-around; margin:10px 0; }
+      section.hero h1 { font-size: 24px; }
+      section.hero p { font-size: 16px; }
+      .slide-text { font-size: 18px; }
+      button#startBtn { font-size: 16px; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- Banner Slider -->
-<section class="banner-slider">
-  <div class="slide fade active"><img src="image1.jpg" alt="Banner 1"></div>
-  <div class="slide fade"><img src="image2.jpg" alt="Banner 2"></div>
-  <div class="slide fade"><img src="image3.jpg" alt="Banner 3"></div>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">Ageflix</div>
+    <ul>
+      <li><a href="about.html">About</a></li>
+      <li><a href="movies.html">Movies</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="icon">🎬</div>
+  </nav>
 
-  <button class="prev">&#10094;</button>
-  <button class="next">&#10095;</button>
+  <!-- Banner Slider -->
+  <section class="banner-slider">
+    <input type="file" id="bannerUpload" multiple accept="image/*">
+    <button class="prev">&#10094;</button>
+    <button class="next">&#10095;</button>
+    <div class="dots"></div>
+  </section>
 
-  <div class="dots">
-    <span class="dot active" onclick="currentSlide(0)"></span>
-    <span class="dot" onclick="currentSlide(1)"></span>
-    <span class="dot" onclick="currentSlide(2)"></span>
-  </div>
-</section>
+  <!-- Hero / Age Detection -->
+  <section class="hero">
+    <h1>Welcome to Ageflix</h1>
+    <p>Discover movies according to your age group!</p>
 
-<!-- Navbar -->
-<nav class="navbar">
-  <div class="logo-left">Ageflix</div>
-  <button class="menu-btn" onclick="toggleMenu()">☰ Menu</button>
-  <ul id="nav-menu">
-    <li><a href="about.html">About</a></li>
-    <li><a href="movies.html">Movies</a></li>
-    <li><a href="contact.html">Contact</a></li>
-  </ul>
-  <div class="logo-right">Discover movies for every age group!</div>
-</nav>
+    <div id="webcam-container"></div>
+    <div id="label-container"></div>
 
-<div class="project-info">
-  <strong>Ageflix</strong> - This project uses the camera to detect age and recommends movies suitable for the user.
-</div>
+    <button id="startBtn">Start Camera & Detect Age</button>
+  </section>
 
-<section class="hero">
-  <h1>Welcome to Ageflix</h1>
-  <p>Discover movies according to your age group!</p>
-  <div id="webcam-container"></div>
-  <div id="label-container"></div>
-  <button id="startBtn">Start Camera & Detect Age</button>
-</section>
+  <!-- TensorFlow + Teachable Machine -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.4/dist/teachablemachine-image.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.4/dist/teachablemachine-image.min.js"></script>
+  <script>
+    // Age Detection
+    const URL = "https://teachablemachine.withgoogle.com/models/UujRQ_OS4/";
+    let model, webcam, maxPredictions;
 
-<script>
-  // Mobile menu toggle
-  function toggleMenu() { document.getElementById("nav-menu").classList.toggle("show"); }
+    async function init() {
+      const modelURL = URL + "model.json";
+      const metadataURL = URL + "metadata.json";
+      model = await tmImage.load(modelURL, metadataURL);
+      maxPredictions = model.getTotalClasses();
 
-  // Slider Fade effect
-  let slideIndex = 0;
-  const slides = document.querySelectorAll('.slide');
-  const dots = document.querySelectorAll('.dot');
-
-  function showSlide(index) {
-    if(index >= slides.length) slideIndex = 0;
-    else if(index < 0) slideIndex = slides.length - 1;
-    else slideIndex = index;
-
-    slides.forEach((slide,i) => slide.classList.toggle('active', i === slideIndex));
-    dots.forEach((dot,i) => dot.classList.toggle('active', i === slideIndex));
-  }
-
-  document.querySelector('.next').addEventListener('click', () => showSlide(slideIndex + 1));
-  document.querySelector('.prev').addEventListener('click', () => showSlide(slideIndex - 1));
-  function currentSlide(n) { showSlide(n); }
-  setInterval(() => { showSlide(slideIndex + 1); }, 5000);
-  showSlide(slideIndex);
-
-  // Teachable Machine camera
-  const URL = "https://teachablemachine.withgoogle.com/models/UujRQ_OS4/";
-  let model, webcam, maxPredictions;
-
-  async function init() {
-    const modelURL = URL + "model.json";
-    const metadataURL = URL + "metadata.json";
-    model = await tmImage.load(modelURL, metadataURL);
-    maxPredictions = model.getTotalClasses();
-
-    const flip = true;
-    webcam = new tmImage.Webcam(400, 300, flip);
-    await webcam.setup();
-    await webcam.play();
-    document.getElementById("webcam-container").appendChild(webcam.canvas);
-    window.requestAnimationFrame(loop);
-  }
-
-  async function loop() {
-    webcam.update();
-    await predict();
-    window.requestAnimationFrame(loop);
-  }
-
-  async function predict() {
-    const prediction = await model.predict(webcam.canvas);
-    let labelContainer = document.getElementById("label-container");
-    labelContainer.innerHTML = "";
-    prediction.forEach(p => {
-      labelContainer.innerHTML += `<p>${p.className}: ${(p.probability * 100).toFixed(2)}%</p>`;
-    });
-
-    const best = prediction.reduce((a,b) => a.probability > b.probability ? a:b);
-    if(best.probability > 0.8){
-      if(best.className.toLowerCase() === "kids") window.location.href = "kids.html";
-      if(best.className.toLowerCase() === "adult") window.location.href = "adult.html";
-      if(best.className.toLowerCase() === "senior") window.location.href = "senior.html";
+      const flip = true;
+      webcam = new tmImage.Webcam(400, 300, flip);
+      await webcam.setup();
+      await webcam.play();
+      document.getElementById("webcam-container").appendChild(webcam.canvas);
+      window.requestAnimationFrame(loop);
     }
-  }
 
-  document.getElementById("startBtn").addEventListener("click", init);
-</script>
+    async function loop() {
+      webcam.update();
+      await predict();
+      window.requestAnimationFrame(loop);
+    }
+
+    async function predict() {
+      const prediction = await model.predict(webcam.canvas);
+      let labelContainer = document.getElementById("label-container");
+      labelContainer.innerHTML = "";
+      prediction.forEach(p => {
+        labelContainer.innerHTML += `<p>${p.className}: ${(p.probability * 100).toFixed(2)}%</p>`;
+      });
+
+      const best = prediction.reduce((a,b)=>a.probability>b.probability?a:b);
+      if(best.probability>0.8){
+        if(best.className.toLowerCase()==="kids") window.location.href="kids.html";
+        if(best.className.toLowerCase()==="adult") window.location.href="adult.html";
+        if(best.className.toLowerCase()==="senior") window.location.href="senior.html";
+      }
+    }
+
+    document.getElementById("startBtn").addEventListener("click", init);
+
+    // Banner Slider with Upload
+    const slider = document.querySelector('.banner-slider');
+    const uploadInput = document.getElementById('bannerUpload');
+    let banners = [];
+    let slideIndex = 0;
+
+    function createSlide(src, text='Your Banner Text', animation='slide-left', isActive=false){
+      const slide = document.createElement('div');
+      slide.classList.add('slide', animation);
+      if(isActive) slide.classList.add('active');
+
+      const img = document.createElement('img');
+      img.src = src;
+
+      const slideText = document.createElement('div');
+      slideText.classList.add('slide-text', animation);
+      slideText.innerText = text;
+
+      slide.appendChild(img);
+      slide.appendChild(slideText);
+      slider.appendChild(slide);
+
+      const dot = document.createElement('span');
+      dot.classList.add('dot');
+      if(isActive) dot.classList.add('active');
+      dot.addEventListener('click', () => showSlide(banners.indexOf(slide)));
+      slider.querySelector('.dots').appendChild(dot);
+
+      banners.push(slide);
+    }
+
+    function showSlide(index){
+      slideIndex = index < 0 ? banners.length-1 : index >= banners.length ? 0 : index;
+      banners.forEach((slide,i)=>slide.classList.toggle('active', i===slideIndex));
+      document.querySelectorAll('.dot').forEach((dot,i)=>dot.classList.toggle('active', i===slideIndex));
+    }
+
+    document.querySelector('.next').addEventListener('click', ()=>showSlide(slideIndex+1));
+    document.querySelector('.prev').addEventListener('click', ()=>showSlide(slideIndex-1));
+    setInterval(()=>showSlide(slideIndex+1),5000);
+
+    uploadInput.addEventListener('change', (e)=>{
+      const files = Array.from(e.target.files);
+      files.forEach((file)=>{
+        const reader = new FileReader();
+        reader.onload = function(event){
+          const anims = ['slide-left','slide-right','slide-zoom'];
+          createSlide(event.target.result, `Banner ${banners.length+1}`, anims[banners.length % 3], banners.length===0);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+  </script>
 </body>
 </html>
